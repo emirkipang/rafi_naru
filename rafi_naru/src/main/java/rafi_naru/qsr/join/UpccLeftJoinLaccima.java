@@ -20,16 +20,18 @@ public class UpccLeftJoinLaccima implements FlatJoinFunction<Upcc, Laccima, Outp
 		OutputUpcc outputUpcc = new OutputUpcc();
 
 		if (rightElem == null) {
-			String node_type = "";
+			String node_type;
 			outputUpcc.setDate(leftElem.getDate());
 			outputUpcc.setTotal_payload(leftElem.getQuotaUsage());
-			if(leftElem.getAccessType().equals("2") || leftElem.getAccessType().equals("")) {
+			if(leftElem.getAccessType().equals("2")) {
 				node_type = "2G";
 			} else if(leftElem.getAccessType().equals("1")) {
 				node_type = "3G";
 			} else if(leftElem.getAccessType().equals("6")) {
 				node_type = "4G";
-			} 
+			} else {
+				node_type = "2G";
+			}
 			outputUpcc.setNode_type(node_type);
 			outputUpcc.setArea("UNKNOWN");
 			outputUpcc.setRegion("UNKNOWN");

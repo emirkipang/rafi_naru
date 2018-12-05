@@ -32,7 +32,7 @@ public class UpccFlatMap implements FlatMapFunction<String, Upcc> {
 				if (((triggerType.equalsIgnoreCase("2") || triggerType.equalsIgnoreCase("3"))
 						&& !QuotaUsage.equalsIgnoreCase("") && !QuotaUsage.equalsIgnoreCase("0"))) {
 					// body
-					String date = Time.substring(0, 13) + ":00:00";
+					String date = Time.substring(0, 16) + ":00";
 					String lacci_or_eci = "";
 					if (!CGI.equals("")) {
 						lacci_or_eci = CGI.substring(5, 10) + "~" + CGI.substring(10, CGI.length());

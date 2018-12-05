@@ -86,14 +86,18 @@ public class MainPayload {
 	}
 
 	public void processAggregate() {
+		// Laccima
 		laccima_tuples = laccima_tuples.union(laccima_tuples_4g);
 		
+		// Upcc left join Laccima
 		outputUpcc = src_tuples.leftOuterJoin(laccima_tuples)
 				.where("lacci_or_eci").equalTo("lacci_or_eci")
 				.with(new UpccLeftJoinLaccima());
 		
+		// Summary Upcc
 		outputUpcc = outputUpcc.groupBy("date", "node_type", "area", "region").reduceGroup(new OutputUpccGroupReducer());
 		
+		// Put into tuples
 		output = outputUpcc.flatMap(new OutputPayloadFlatMap());
 	}
 
@@ -125,7 +129,7 @@ public class MainPayload {
 		/** dev **/
 //		int proses_paralel = 2;
 //		int sink_paralel = 1;
-//		MainPayload main = new MainPayload(proses_paralel, sink_paralel, Constant.OUTPUT_UPCC);
+//		MainPayload main = new MainPayload(proses_paralel, sink_paralel, Constant.OUTPUT_PAYLOAD);
 //		files.put("source", Constant.FILE_UPCC);
 //		files.put("ref_lacima", Constant.FILE_LACIMA);
 //		files.put("ref_lacima_4g", Constant.FILE_LACIMA_4G);
@@ -138,7 +142,7 @@ public class MainPayload {
 
 		// System.out.println(env.getExecutionPlan());
 		try {
-			main.getEnv().execute(Constant.APP_NAME);
+			main.getEnv().execute(Constant.APP_NAME_PAYLOAD);
 		} catch (Exception e) {
 			// TODO Auto-generated catch blockF
 			e.printStackTrace();
