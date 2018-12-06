@@ -46,45 +46,6 @@ public class Laccima {
 		this.regional_channel = regional_channel;
 	}
 	
-	public Laccima(String lac, String cell_id, String site_name, String vendor, String site_id, String ne_id,
-			String bsc_name, String msc_name, String node, String longitude, String latitude, String azimuth,
-			String regional_network, String propinsi, String kabupaten, String kecamatan, String kelurahan,
-			String regional_channel, String branch, String subbranch, String address, String sector, String cluster,
-			String mitra_ad, String cgi_prepaid, String cgi_postpaid, String ocs_cluster, String ocs_zone,
-			String type_lacci, String on_air_date, String eci) {
-		super();
-		this.lac = lac;
-		this.cell_id = cell_id;
-		this.site_name = site_name;
-		this.vendor = vendor;
-		this.site_id = site_id;
-		this.ne_id = ne_id;
-		this.bsc_name = bsc_name;
-		this.msc_name = msc_name;
-		this.node = node;
-		this.longitude = longitude;
-		this.latitude = latitude;
-		this.azimuth = azimuth;
-		this.regional_network = regional_network;
-		this.propinsi = propinsi;
-		this.kabupaten = kabupaten;
-		this.kecamatan = kecamatan;
-		this.kelurahan = kelurahan;
-		this.regional_channel = regional_channel;
-		this.branch = branch;
-		this.subbranch = subbranch;
-		this.address = address;
-		this.sector = sector;
-		this.cluster = cluster;
-		this.mitra_ad = mitra_ad;
-		this.cgi_prepaid = cgi_prepaid;
-		this.cgi_postpaid = cgi_postpaid;
-		this.ocs_cluster = ocs_cluster;
-		this.ocs_zone = ocs_zone;
-		this.type_lacci = type_lacci;
-		this.on_air_date = on_air_date;
-		this.eci = eci;
-	}
 	
 	
 	

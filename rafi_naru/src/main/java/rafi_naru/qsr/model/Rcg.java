@@ -52,44 +52,7 @@ public class Rcg {
 		this.revenue = revenue;
 	}
 	
-	public Rcg(String timestamp, String mSISDN, String account, String rechargeChannel, String expirationdate,
-			String serialnumber, String deltaBalance, String balanceamount, String creditindicator,
-			String rechargemethod, String rechargeID, String bonusinformation, String providerID, String sourceIP,
-			String userID, String resultCode, String bankcode, String anumberlocation, String balancebefore,
-			String adjustmentReason, String caseID, String cRMUserID, String oldExpirationDate, String splitCode,
-			String rechargeAmount, String future_String_2, String future_String_3, String iFRS_ALLOWANCE_INFO,
-			String iFRS_IND) {
-		super();
-		Timestamp = timestamp;
-		MSISDN = mSISDN;
-		Account = account;
-		RechargeChannel = rechargeChannel;
-		Expirationdate = expirationdate;
-		Serialnumber = serialnumber;
-		DeltaBalance = deltaBalance;
-		Balanceamount = balanceamount;
-		Creditindicator = creditindicator;
-		Rechargemethod = rechargemethod;
-		RechargeID = rechargeID;
-		Bonusinformation = bonusinformation;
-		this.providerID = providerID;
-		SourceIP = sourceIP;
-		UserID = userID;
-		ResultCode = resultCode;
-		Bankcode = bankcode;
-		Anumberlocation = anumberlocation;
-		Balancebefore = balancebefore;
-		AdjustmentReason = adjustmentReason;
-		CaseID = caseID;
-		CRMUserID = cRMUserID;
-		OldExpirationDate = oldExpirationDate;
-		SplitCode = splitCode;
-		RechargeAmount = rechargeAmount;
-		Future_String_2 = future_String_2;
-		Future_String_3 = future_String_3;
-		IFRS_ALLOWANCE_INFO = iFRS_ALLOWANCE_INFO;
-		IFRS_IND = iFRS_IND;
-	}
+	
 	public Rcg() {
 		super();
 	}
