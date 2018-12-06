@@ -3,30 +3,30 @@ package rafi_naru.qsr.agg;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.util.Collector;
 
-import rafi_naru.qsr.model.OutputUpcc;
+import rafi_naru.qsr.model.OutputAgg;
 import rafi_naru.qsr.model.Upcc;
 import rafi_naru.qsr.util.Helper;
 
-public class OutputUpccGroupReducer implements GroupReduceFunction<OutputUpcc, OutputUpcc> {
+public class OutputAggGroupReducer implements GroupReduceFunction<OutputAgg, OutputAgg> {
 	private String date = "";
 	private String node_type = "";
 	private String area = "";
 	private String region = "";
-	private Double total_payload = 0.0;
+	private Double amount = 0.0;
 
-	public void reduce(Iterable<OutputUpcc> in, Collector<OutputUpcc> out) throws Exception {
+	public void reduce(Iterable<OutputAgg> in, Collector<OutputAgg> out) throws Exception {
 		// TODO Auto-generated method stub
 
-		for (OutputUpcc output : in) {
+		for (OutputAgg output : in) {
 			date = output.getDate();
 			node_type = output.getNode_type();
 			area = output.getArea();
 			region = output.getRegion();
 
-			total_payload += Double.parseDouble(output.getTotal_payload());
+			amount += Double.parseDouble(output.getAmount());
 		}
 
-		OutputUpcc output = new OutputUpcc(date, node_type, area, region, Helper.withoutScientificNotation(total_payload));
+		OutputAgg output = new OutputAgg(date, node_type, area, region, Helper.withoutScientificNotation(amount));
 		out.collect(output);
 	}
 

@@ -9,14 +9,14 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.FileSystem.WriteMode;
 
-import rafi_naru.qsr.agg.OutputUpccGroupReducer;
+import rafi_naru.qsr.agg.OutputAggGroupReducer;
 import rafi_naru.qsr.join.UpccLeftJoinLaccima;
 import rafi_naru.qsr.map.LaccimaFlatMap;
-import rafi_naru.qsr.map.OutputPayloadFlatMap;
+import rafi_naru.qsr.map.OutputFlatMap;
 import rafi_naru.qsr.map.UpccFlatMap;
 import rafi_naru.qsr.model.Laccima;
-import rafi_naru.qsr.model.Output;
-import rafi_naru.qsr.model.OutputUpcc;
+import rafi_naru.qsr.model.OutputTuple;
+import rafi_naru.qsr.model.OutputAgg;
 import rafi_naru.qsr.model.Upcc;
 import rafi_naru.qsr.util.Constant;
 
@@ -37,8 +37,8 @@ public class MainPayload {
 
 	private DataSet<Laccima> laccima_tuples;
 	private DataSet<Laccima> laccima_tuples_4g;
-	private DataSet<Output> output;
-	private DataSet<OutputUpcc> outputUpcc;
+	private DataSet<OutputTuple> output;
+	private DataSet<OutputAgg> outputUpcc;
 
 	public MainPayload(int proses_paralel, int sink_paralel, String outputPath) {
 		this.env = ExecutionEnvironment.getExecutionEnvironment();
@@ -80,8 +80,8 @@ public class MainPayload {
 
 	public void processInput() {
 		src_tuples = dataset_inputs.get("source").flatMap(new UpccFlatMap());
-		laccima_tuples = dataset_inputs.get("ref_lacima").flatMap(new LaccimaFlatMap("3G"));
-		laccima_tuples_4g = dataset_inputs.get("ref_lacima_4g").flatMap(new LaccimaFlatMap("4G"));
+		laccima_tuples = dataset_inputs.get("ref_lacima").flatMap(new LaccimaFlatMap("3G", true));
+		laccima_tuples_4g = dataset_inputs.get("ref_lacima_4g").flatMap(new LaccimaFlatMap("4G", true));
 
 	}
 
@@ -95,10 +95,10 @@ public class MainPayload {
 				.with(new UpccLeftJoinLaccima());
 		
 		// Summary Upcc
-		outputUpcc = outputUpcc.groupBy("date", "node_type", "area", "region").reduceGroup(new OutputUpccGroupReducer());
+		outputUpcc = outputUpcc.groupBy("date", "node_type", "area", "region").reduceGroup(new OutputAggGroupReducer());
 		
 		// Put into tuples
-		output = outputUpcc.flatMap(new OutputPayloadFlatMap());
+		output = outputUpcc.flatMap(new OutputFlatMap());
 	}
 
 	public void sink() throws Exception {

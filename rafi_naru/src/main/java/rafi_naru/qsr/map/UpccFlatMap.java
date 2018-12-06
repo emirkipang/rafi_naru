@@ -7,6 +7,7 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
 import rafi_naru.qsr.model.Upcc;
+import rafi_naru.qsr.util.Constant;
 
 public class UpccFlatMap implements FlatMapFunction<String, Upcc> {
 
@@ -19,7 +20,7 @@ public class UpccFlatMap implements FlatMapFunction<String, Upcc> {
 		for (String fields : lines) {
 			String[] field = fields.split("\\,", -1);
 			
-			if(field.length == 176) {
+			if(field.length == Constant.UPCC_COLUMN_LENGTH) {
 				// head
 				String AccessType = field[17];
 				String triggerType = field[0];

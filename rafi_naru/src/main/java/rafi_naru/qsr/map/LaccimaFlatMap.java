@@ -8,15 +8,18 @@ import org.apache.flink.util.Collector;
 
 import rafi_naru.qsr.model.Laccima;
 import rafi_naru.qsr.model.Upcc;
+import rafi_naru.qsr.util.Constant;
 import rafi_naru.qsr.util.Helper;
 
 public class LaccimaFlatMap implements FlatMapFunction<String, Laccima> {
 
 	private static final long serialVersionUID = 1L;
 	private String node_;
+	private boolean forUpcc;
 
-	public LaccimaFlatMap(String node_) {
+	public LaccimaFlatMap(String node_, boolean forUPCC) {
 		this.node_ = node_;
+		this.forUpcc = forUPCC;
 	}
 
 	public void flatMap(String value, Collector<Laccima> out) throws Exception {
@@ -26,7 +29,7 @@ public class LaccimaFlatMap implements FlatMapFunction<String, Laccima> {
 		for (String fields : lines) {
 			String[] field = fields.split("\\|", -1);
 
-			if (field.length == 31) {
+			if (field.length == Constant.LACCIMA_COLUMN_LENGTH) {
 				// head
 				String lac = field[0];
 				String cell_id = field[1];
@@ -41,8 +44,10 @@ public class LaccimaFlatMap implements FlatMapFunction<String, Laccima> {
 					// body
 					if (node_.equals("3G")) {
 						lacci_or_eci = Helper.joinRule(lac, 5) + "~" + Helper.joinRule(cell_id, 5);
-					} else if (node_.equals("4G")) {
+					} else if (node_.equals("4G") && this.forUpcc) {
 						lacci_or_eci = eci;
+					} else {
+						lacci_or_eci = Helper.joinRule(lac, 7) + "~" + Helper.joinRule(cell_id, 3);
 					}
 
 					if (regional_channel.equals("BALI NUSRA")) {

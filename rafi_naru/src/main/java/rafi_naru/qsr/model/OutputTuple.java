@@ -2,7 +2,7 @@ package rafi_naru.qsr.model;
 
 import org.apache.flink.api.java.tuple.Tuple1;
 
-public class Output
+public class OutputTuple
 		extends
 		Tuple1<String> {
 	/**

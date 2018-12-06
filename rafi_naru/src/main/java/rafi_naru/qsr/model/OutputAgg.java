@@ -1,25 +1,27 @@
 package rafi_naru.qsr.model;
 
-public class OutputUpcc {
+public class OutputAgg {
 	private String date;
 	private String node_type;
 	private String area;
 	private String region;
-	private String total_payload;
+	private String amount;
 
-	public OutputUpcc() {
+	public OutputAgg() {
 		super();
 	}
 
-	public OutputUpcc(String date, String node_type, String area, String region,
-			String total_payload) {
+	public OutputAgg(String date, String node_type, String area, String region,
+			String amount) {
 		super();
 		this.date = date;
 		this.node_type = node_type;
 		this.area = area;
 		this.region = region;
-		this.total_payload = total_payload;
+		this.amount = amount;
 	}
+
+	
 
 	public String getDate() {
 		return date;
@@ -28,8 +30,6 @@ public class OutputUpcc {
 	public void setDate(String date) {
 		this.date = date;
 	}
-
-
 
 	public String getNode_type() {
 		return node_type;
@@ -55,18 +55,18 @@ public class OutputUpcc {
 		this.region = region;
 	}
 
-	public String getTotal_payload() {
-		return total_payload;
+	public String getAmount() {
+		return amount;
 	}
 
-	public void setTotal_payload(String total_payload) {
-		this.total_payload = total_payload;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 
 	@Override
 	public String toString() {
 		return this.getDate() + "|" + this.getNode_type() + "|" + this.getArea() + "|"
-				+ this.getRegion() + "|" + this.getTotal_payload();
+				+ this.getRegion() + "|" + this.getAmount();
 	}
 
 }
