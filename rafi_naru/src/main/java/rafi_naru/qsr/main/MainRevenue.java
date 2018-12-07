@@ -8,21 +8,32 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.FileSystem.WriteMode;
 
-import rafi_naru.qsr.agg.OutputAggGroupReducer;
-import rafi_naru.qsr.join.ChgLeftJoinLaccima;
-import rafi_naru.qsr.join.RcgLeftJoinLaccima;
-import rafi_naru.qsr.join.RcgLeftJoinSplitCodeRev;
-import rafi_naru.qsr.map.ChgFlatMap;
-import rafi_naru.qsr.map.LaccimaFlatMap;
-import rafi_naru.qsr.map.OutputFlatMap;
-import rafi_naru.qsr.map.RcgFlatMap;
-import rafi_naru.qsr.map.SplitCodeRevFlatMap;
-import rafi_naru.qsr.model.Chg;
-import rafi_naru.qsr.model.Laccima;
-import rafi_naru.qsr.model.OutputTuple;
-import rafi_naru.qsr.model.OutputAgg;
-import rafi_naru.qsr.model.Rcg;
-import rafi_naru.qsr.model.SplitCodeRev;
+import rafi_naru.qsr.general.agg.OutputAggGroupReducer;
+import rafi_naru.qsr.general.map.LaccimaFlatMap;
+import rafi_naru.qsr.general.map.MostDominantFlatMap;
+import rafi_naru.qsr.general.map.OutputFlatMap;
+import rafi_naru.qsr.general.model.Laccima;
+import rafi_naru.qsr.general.model.MostDominant;
+import rafi_naru.qsr.general.model.OutputAgg;
+import rafi_naru.qsr.general.model.OutputTuple;
+import rafi_naru.qsr.payload.join.UpccInnerJoinLaccima;
+import rafi_naru.qsr.payload.join.UpccLeftJoinLaccimaNULL;
+import rafi_naru.qsr.payload.join.UpccLeftJoinMostDominant;
+import rafi_naru.qsr.revenue.join.ChgInnerJoinLaccima;
+import rafi_naru.qsr.revenue.join.ChgLeftJoinLaccima;
+import rafi_naru.qsr.revenue.join.ChgLeftJoinLaccimaNULL;
+import rafi_naru.qsr.revenue.join.RcgInnerJoinLaccima;
+import rafi_naru.qsr.revenue.join.RcgLeftJoinLaccima;
+import rafi_naru.qsr.revenue.join.RcgLeftJoinLaccimaNULL;
+import rafi_naru.qsr.revenue.join.UnknownRevLeftJoinMostDominant;
+import rafi_naru.qsr.revenue.join.RcgInnerJoinSplitCodeRev;
+import rafi_naru.qsr.revenue.map.ChgFlatMap;
+import rafi_naru.qsr.revenue.map.RcgFlatMap;
+import rafi_naru.qsr.revenue.map.SplitCodeRevFlatMap;
+import rafi_naru.qsr.revenue.model.Chg;
+import rafi_naru.qsr.revenue.model.Rcg;
+import rafi_naru.qsr.revenue.model.SplitCodeRev;
+import rafi_naru.qsr.revenue.model.UnknownRev;
 import rafi_naru.qsr.util.Constant;
 
 /**
@@ -39,15 +50,20 @@ public class MainRevenue {
 
 	// tuples variable
 	private DataSet<Chg> src_tuples;
+	private DataSet<UnknownRev> src_tuples_laccima_unknown;
 	private DataSet<Rcg> src_tuples2;
+	private DataSet<UnknownRev> src_tuples2_laccima_unknown;
 
 	private DataSet<Laccima> laccima_tuples;
 	private DataSet<Laccima> laccima_tuples_4g;
 	private DataSet<SplitCodeRev> splitcoderev_tuples;
+	private DataSet<MostDominant> most_dominant_tuples;
 
 	private DataSet<OutputTuple> output;
-	private DataSet<OutputAgg> outputAgg;
+	private DataSet<OutputAgg> outputAgg1;
 	private DataSet<OutputAgg> outputAgg2;
+	private DataSet<OutputAgg> outputAgg3;
+	private DataSet<OutputAgg> outputAgg;
 
 	public MainRevenue(int proses_paralel, int sink_paralel, String outputPath) {
 		this.env = ExecutionEnvironment.getExecutionEnvironment();
@@ -96,31 +112,43 @@ public class MainRevenue {
 		laccima_tuples = dataset_inputs.get("ref_lacima").flatMap(new LaccimaFlatMap("3G", false));
 		laccima_tuples_4g = dataset_inputs.get("ref_lacima_4g").flatMap(new LaccimaFlatMap("4G", false));
 		splitcoderev_tuples = dataset_inputs.get("split_code_ref").flatMap(new SplitCodeRevFlatMap());
-
+		most_dominant_tuples = dataset_inputs.get("ref_most_dominant").flatMap(new MostDominantFlatMap());
 	}
 
 	public void processAggregate() {
 		// Laccima
 		laccima_tuples = laccima_tuples.union(laccima_tuples_4g);
 
-		// Chg left join Laccima
-		outputAgg = src_tuples.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
-				.with(new ChgLeftJoinLaccima());
+		// Chg inner join Laccima
+		outputAgg1 = src_tuples.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
+				.with(new ChgInnerJoinLaccima());
 
-		// Rcg left join SplitCodeRev
+		// chg left join laccima NULL
+		src_tuples_laccima_unknown = src_tuples.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
+				.with(new ChgLeftJoinLaccimaNULL());
+
+		// Rcg inner join SplitCodeRev
 		src_tuples2 = src_tuples2.leftOuterJoin(splitcoderev_tuples).where("splitcode_with_recharge")
-				.equalTo("splitcode_with_recharge").with(new RcgLeftJoinSplitCodeRev());
+				.equalTo("splitcode_with_recharge").with(new RcgInnerJoinSplitCodeRev());
 
-		// Rcg left join Laccima
+		// Rcg inner join Laccima
 		outputAgg2 = src_tuples2.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
-				.with(new RcgLeftJoinLaccima());
+				.with(new RcgInnerJoinLaccima());
+
+		// rcg left join laccima NULL
+		src_tuples2_laccima_unknown = src_tuples2.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
+				.with(new RcgLeftJoinLaccimaNULL());
+
+		// chg laccima null + rcg laccima null -> mostdom
+		outputAgg3 = (src_tuples_laccima_unknown.union(src_tuples2_laccima_unknown)).leftOuterJoin(most_dominant_tuples).where("MSISDN").equalTo("msisdn")
+				.with(new UnknownRevLeftJoinMostDominant());
 
 		// Summary Chg
-		outputAgg = outputAgg.union(outputAgg2);
+		outputAgg = outputAgg1.union(outputAgg2).union(outputAgg3);
 		outputAgg = outputAgg.groupBy("date", "node_type", "area", "region").reduceGroup(new OutputAggGroupReducer());
 
 		// Put into tuples
-		output = outputAgg2.flatMap(new OutputFlatMap());
+		output = outputAgg.flatMap(new OutputFlatMap(Constant.USAGE_HEADER));
 	}
 
 	public void sink() throws Exception {
@@ -156,7 +184,9 @@ public class MainRevenue {
 		files.put("source2", Constant.FILE_RCG);
 		files.put("ref_lacima", Constant.FILE_LACIMA);
 		files.put("ref_lacima_4g", Constant.FILE_LACIMA_4G);
+		files.put("ref_most_dominant", Constant.FILE_MOST_DOMINANT);
 		files.put("split_code_ref", Constant.FILE_SPLIT_CODE_REV);
+
 		/****/
 
 		main.setInput(files);
