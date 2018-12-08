@@ -7,10 +7,11 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
 import rafi_naru.qsr.model.Chg;
+import rafi_naru.qsr.model.Source;
 import rafi_naru.qsr.util.Constant;
 import rafi_naru.qsr.util.Helper;
 
-public class ChgFlatMap implements FlatMapFunction<String, Chg> {
+public class ChgFlatMap implements FlatMapFunction<String, Source> {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -19,7 +20,7 @@ public class ChgFlatMap implements FlatMapFunction<String, Chg> {
 	private String lacci = "";
 	private String revenue;
 
-	public void flatMap(String value, Collector<Chg> out) throws Exception {
+	public void flatMap(String value, Collector<Source> out) throws Exception {
 		// TODO Auto-generated method stub
 		String[] lines = value.split("\n");
 
@@ -71,7 +72,8 @@ public class ChgFlatMap implements FlatMapFunction<String, Chg> {
 				
 
 					// output
-					out.collect(new Chg(date, lacci, revenue, AParty));
+					//out.collect(new Chg(date, lacci, revenue, AParty, FutureString3));
+					out.collect(new Source(date, lacci, AParty, FutureString3, revenue, "chg")); 
 				}
 			}			
 		}

@@ -39,13 +39,14 @@ public class Rcg {
 	private String revenue; // -1
 	private String splitcode_with_recharge; // -1
 
-	public Rcg(String date, String lacci, String revenue, String splitcode_with_recharge, String MSISDN) {
+	public Rcg(String date, String lacci, String revenue, String splitcode_with_recharge, String MSISDN, String Future_String_3) {
 		super();
 		this.date = date;
 		this.lacci = lacci;
 		this.revenue = revenue;
 		this.splitcode_with_recharge = splitcode_with_recharge;
 		this.MSISDN = MSISDN;
+		this.Future_String_3 = Future_String_3;
 	}
 
 	public Rcg(String date, String lacci, String revenue) {

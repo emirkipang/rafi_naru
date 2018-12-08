@@ -56,7 +56,7 @@ public class RcgFlatMap implements FlatMapFunction<String, Rcg> {
 					splitcode_with_recharge = SplitCode + "~" + revenue;
 					
 					// output
-					out.collect(new Rcg(date, lacci, revenue, splitcode_with_recharge, MSISDN));
+					out.collect(new Rcg(date, lacci, revenue, splitcode_with_recharge, MSISDN, Future_String_3));
 				}
 			}			
 		}

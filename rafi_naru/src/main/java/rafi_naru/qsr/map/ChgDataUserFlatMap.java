@@ -36,7 +36,7 @@ public class ChgDataUserFlatMap implements FlatMapFunction<String, Chg> {
 				String VAScode = field[52];// 52
 
 				// body
-				date = Helper.getFormattedDate(Timestamp.substring(0, 12) + "00");
+				date = Helper.getDateAggregate15Minutes(Helper.getFormattedDate(Timestamp.substring(0, 12) + "00"));
 
 				// Lacci
 				if (FutureString3.equalsIgnoreCase("129")) {
@@ -51,7 +51,7 @@ public class ChgDataUserFlatMap implements FlatMapFunction<String, Chg> {
 				revenue = "1";
 
 				// output
-				out.collect(new Chg(date, lacci, revenue, AParty, Servicefilter, VAScode));
+				out.collect(new Chg(date, lacci, revenue, AParty, Servicefilter, VAScode, FutureString3));
 
 			}
 		}

@@ -37,7 +37,7 @@ public class RcgDataUserFlatMap implements FlatMapFunction<String, Rcg> {
 				String MSISDN = field[1].trim(); // 1
 
 				// body
-				date = Helper.getFormattedDate(Timestamp.substring(0, 12) + "00");
+				date = Helper.getDateAggregate15Minutes(Helper.getFormattedDate(Timestamp.substring(0, 12) + "00"));
 
 				// Lacci
 				if (Future_String_3.equalsIgnoreCase("4G") && !Anumberlocation.equalsIgnoreCase("")) {
@@ -57,7 +57,7 @@ public class RcgDataUserFlatMap implements FlatMapFunction<String, Rcg> {
 				splitcode_with_recharge = SplitCode + "~" + RechargeAmount;
 
 				// output
-				out.collect(new Rcg(date, lacci, revenue, splitcode_with_recharge, MSISDN));
+				out.collect(new Rcg(date, lacci, revenue, splitcode_with_recharge, MSISDN, Future_String_3));
 
 			}
 		}

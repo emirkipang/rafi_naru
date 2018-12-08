@@ -10,11 +10,9 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.FileSystem.WriteMode;
 
 import rafi_naru.qsr.agg.OutputAggGroupReducer;
-import rafi_naru.qsr.join.UnknownRevLeftJoinMostDominant;
-import rafi_naru.qsr.join.UnknownRevLeftJoinMostDominantWithMsisdn;
-import rafi_naru.qsr.join.UpccInnerJoinLaccima;
-import rafi_naru.qsr.join.UpccLeftJoinLaccimaNULL;
-import rafi_naru.qsr.join.UpccLeftJoinMostDominant;
+import rafi_naru.qsr.join.SourceInnerJoinLaccima;
+import rafi_naru.qsr.join.SourceLeftJoinLaccimaNULL;
+import rafi_naru.qsr.join.SourceLeftJoinMostDominant;
 import rafi_naru.qsr.map.LaccimaFlatMap;
 import rafi_naru.qsr.map.MostDominantFlatMap;
 import rafi_naru.qsr.map.OutputFlatMap;
@@ -23,8 +21,7 @@ import rafi_naru.qsr.model.Laccima;
 import rafi_naru.qsr.model.MostDominant;
 import rafi_naru.qsr.model.OutputAgg;
 import rafi_naru.qsr.model.OutputTuple;
-import rafi_naru.qsr.model.UnknownRev;
-import rafi_naru.qsr.model.Upcc;
+import rafi_naru.qsr.model.Source;
 import rafi_naru.qsr.util.Constant;
 
 /**
@@ -40,15 +37,16 @@ public class MainPayload {
 	private String outputPath;
 
 	// tuples variable
-	private DataSet<Upcc> src_tuples;
-	private DataSet<UnknownRev> src_tuples_laccima_unknown;
+	private DataSet<Source> source_upcc;
+
+	private DataSet<Source> source_laccima_unknown;
 	private DataSet<Laccima> laccima_tuples;
 	private DataSet<Laccima> laccima_tuples_4g;
 	private DataSet<MostDominant> most_dominant_tuples;
 	private DataSet<OutputTuple> output;
-	private DataSet<OutputAgg> outputAgg1;
-	private DataSet<OutputAgg> outputAgg2;
-	private DataSet<OutputAgg> outputAgg;
+	private DataSet<OutputAgg> outputAgg_source_laccima;
+	private DataSet<OutputAgg> outputAgg_source_mostdom;
+	private DataSet<OutputAgg> outputAgg_all;
 
 	public MainPayload(int proses_paralel, int sink_paralel, String outputPath) {
 		this.env = ExecutionEnvironment.getExecutionEnvironment();
@@ -89,7 +87,9 @@ public class MainPayload {
 	}
 
 	public void processInput() {
-		src_tuples = dataset_inputs.get("source").flatMap(new UpccFlatMap());
+		// upcc to source directly
+		source_upcc = dataset_inputs.get("source").flatMap(new UpccFlatMap());
+
 		laccima_tuples = dataset_inputs.get("ref_lacima").flatMap(new LaccimaFlatMap("3G", true));
 		laccima_tuples_4g = dataset_inputs.get("ref_lacima_4g").flatMap(new LaccimaFlatMap("4G", true));
 		most_dominant_tuples = dataset_inputs.get("ref_most_dominant").flatMap(new MostDominantFlatMap());
@@ -99,24 +99,26 @@ public class MainPayload {
 		// Laccima
 		laccima_tuples = laccima_tuples.union(laccima_tuples_4g);
 
-		// Upcc inner join Laccima 
-		outputAgg1 = src_tuples.leftOuterJoin(laccima_tuples).where("lacci_or_eci").equalTo("lacci_or_eci")
-				.with(new UpccInnerJoinLaccima());
+		/************* 2. Laccima *****************************/
+		// Upcc
+		outputAgg_source_laccima = source_upcc.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
+				.with(new SourceInnerJoinLaccima());
 
+		/************* 3. Mostdom *****************************/
 		// Upcc left join laccima NULL -> mostdom
-		src_tuples_laccima_unknown = src_tuples.leftOuterJoin(laccima_tuples).where("lacci_or_eci")
-				.equalTo("lacci_or_eci").with(new UpccLeftJoinLaccimaNULL());
+		source_laccima_unknown = source_upcc.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
+				.with(new SourceLeftJoinLaccimaNULL());
 		
-		// mostdom
-		outputAgg2 = src_tuples_laccima_unknown.leftOuterJoin(most_dominant_tuples)
-				.where("MSISDN").equalTo("msisdn").with(new UnknownRevLeftJoinMostDominant());
+		outputAgg_source_mostdom = source_laccima_unknown.leftOuterJoin(most_dominant_tuples).where("msisdn")
+				.equalTo("msisdn").with(new SourceLeftJoinMostDominant());
 
-
-		// Summary Upcc
-		outputAgg = (outputAgg1.union(outputAgg2)).groupBy("date", "node_type", "area", "region").reduceGroup(new OutputAggGroupReducer());
-
+		/************* 5. Summary *********************************/
+		// Summary
+		outputAgg_all = (outputAgg_source_laccima.union(outputAgg_source_mostdom))
+				.groupBy("date", "node_type", "area", "region").reduceGroup(new OutputAggGroupReducer());
+		
 		// Put into tuples
-		output = outputAgg.flatMap(new OutputFlatMap(Constant.PAYLOAD_HEADER));
+		output = outputAgg_all.flatMap(new OutputFlatMap(Constant.PAYLOAD_HEADER));
 	}
 
 	public void sink() throws Exception {
@@ -129,22 +131,22 @@ public class MainPayload {
 		HashMap<String, String> files = new HashMap<String, String>();
 
 		/** prod **/
-		 ParameterTool params = ParameterTool.fromArgs(args);
-		
-		 int proses_paralel = params.getInt("slot");
-		 int sink_paralel = params.getInt("sink");
-		 String source = params.get("source");
-		 String laccima = params.get("laccima");
-		 String laccima_4g = params.get("laccima_4g");
-		 String most_dominant = params.get("most_dominant");
-		 String output = params.get("output");
-		
-		 MainPayload main = new MainPayload(proses_paralel, sink_paralel, output);
-		
-		 files.put("source", source);
-		 files.put("ref_lacima", laccima);
-		 files.put("ref_lacima_4g", laccima_4g);
-		 files.put("ref_most_dominant", most_dominant);
+		ParameterTool params = ParameterTool.fromArgs(args);
+
+		int proses_paralel = params.getInt("slot");
+		int sink_paralel = params.getInt("sink");
+		String source = params.get("source");
+		String laccima = params.get("laccima");
+		String laccima_4g = params.get("laccima_4g");
+		String most_dominant = params.get("most_dominant");
+		String output = params.get("output");
+
+		MainPayload main = new MainPayload(proses_paralel, sink_paralel, output);
+
+		files.put("source", source);
+		files.put("ref_lacima", laccima);
+		files.put("ref_lacima_4g", laccima_4g);
+		files.put("ref_most_dominant", most_dominant);
 
 		/** dev **/
 //		int proses_paralel = 2;

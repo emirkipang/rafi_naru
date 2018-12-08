@@ -10,31 +10,23 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.FileSystem.WriteMode;
 
 import rafi_naru.qsr.agg.OutputAggGroupReducer;
-import rafi_naru.qsr.join.ChgInnerJoinLaccima;
-import rafi_naru.qsr.join.ChgLeftJoinLaccimaNULL;
-import rafi_naru.qsr.join.RcgInnerJoinLaccima;
 import rafi_naru.qsr.join.RcgInnerJoinSplitCodeRev;
-import rafi_naru.qsr.join.RcgLeftJoinLaccimaNULL;
-import rafi_naru.qsr.join.UnknownRevLeftJoinMostDominant;
-import rafi_naru.qsr.join.UpccInnerJoinLaccima;
-import rafi_naru.qsr.join.UpccLeftJoinLaccimaNULL;
-import rafi_naru.qsr.join.UpccLeftJoinMostDominant;
+import rafi_naru.qsr.join.SourceInnerJoinLaccima;
+import rafi_naru.qsr.join.SourceLeftJoinLaccimaNULL;
+import rafi_naru.qsr.join.SourceLeftJoinMostDominant;
 import rafi_naru.qsr.map.ChgFlatMap;
 import rafi_naru.qsr.map.LaccimaFlatMap;
 import rafi_naru.qsr.map.MostDominantFlatMap;
 import rafi_naru.qsr.map.OutputFlatMap;
 import rafi_naru.qsr.map.RcgFlatMap;
 import rafi_naru.qsr.map.SplitCodeRevFlatMap;
-import rafi_naru.qsr.model.Chg;
 import rafi_naru.qsr.model.Laccima;
 import rafi_naru.qsr.model.MostDominant;
 import rafi_naru.qsr.model.OutputAgg;
 import rafi_naru.qsr.model.OutputTuple;
 import rafi_naru.qsr.model.Rcg;
+import rafi_naru.qsr.model.Source;
 import rafi_naru.qsr.model.SplitCodeRev;
-import rafi_naru.qsr.model.UnknownRev;
-import rafi_naru.qsr.revenue.join.ChgLeftJoinLaccima;
-import rafi_naru.qsr.revenue.join.RcgLeftJoinLaccima;
 import rafi_naru.qsr.util.Constant;
 
 /**
@@ -50,10 +42,11 @@ public class MainRevenue {
 	private String outputPath;
 
 	// tuples variable
-	private DataSet<Chg> src_tuples;
-	private DataSet<UnknownRev> src_tuples_laccima_unknown;
-	private DataSet<Rcg> src_tuples2;
-	private DataSet<UnknownRev> src_tuples2_laccima_unknown;
+	private DataSet<Source> source_chg;
+	private DataSet<Source> source_rcg;
+	private DataSet<Source> source_all;
+	private DataSet<Source> source_laccima_unknown;
+	private DataSet<Rcg> src_tuples_rcg;
 
 	private DataSet<Laccima> laccima_tuples;
 	private DataSet<Laccima> laccima_tuples_4g;
@@ -61,10 +54,9 @@ public class MainRevenue {
 	private DataSet<MostDominant> most_dominant_tuples;
 
 	private DataSet<OutputTuple> output;
-	private DataSet<OutputAgg> outputAgg1;
-	private DataSet<OutputAgg> outputAgg2;
-	private DataSet<OutputAgg> outputAgg3;
-	private DataSet<OutputAgg> outputAgg;
+	private DataSet<OutputAgg> outputAgg_source_laccima;
+	private DataSet<OutputAgg> outputAgg_source_mostdom;
+	private DataSet<OutputAgg> outputAgg_all;
 
 	public MainRevenue(int proses_paralel, int sink_paralel, String outputPath) {
 		this.env = ExecutionEnvironment.getExecutionEnvironment();
@@ -105,10 +97,12 @@ public class MainRevenue {
 	}
 
 	public void processInput() {
-		// source
-		src_tuples = dataset_inputs.get("source").flatMap(new ChgFlatMap())
+		// chg directly to source
+		source_chg = dataset_inputs.get("source").flatMap(new ChgFlatMap())
 				.union(dataset_inputs.get("source3").flatMap(new ChgFlatMap()));
-		src_tuples2 = dataset_inputs.get("source2").flatMap(new RcgFlatMap())
+		
+		// rcg
+		src_tuples_rcg = dataset_inputs.get("source2").flatMap(new RcgFlatMap())
 				.union(dataset_inputs.get("source4").flatMap(new RcgFlatMap()));
 
 		// ref
@@ -122,36 +116,32 @@ public class MainRevenue {
 		// Laccima
 		laccima_tuples = laccima_tuples.union(laccima_tuples_4g);
 
-		// Chg inner join Laccima
-		outputAgg1 = src_tuples.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
-				.with(new ChgInnerJoinLaccima());
-
-		// chg left join laccima NULL
-		src_tuples_laccima_unknown = src_tuples.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
-				.with(new ChgLeftJoinLaccimaNULL());
-
-		// Rcg inner join SplitCodeRev
-		src_tuples2 = src_tuples2.leftOuterJoin(splitcoderev_tuples).where("splitcode_with_recharge")
+		/************* 1. Source *****************************/
+		// Rcg inner join SplitCodeRev -> source
+		source_rcg = src_tuples_rcg.leftOuterJoin(splitcoderev_tuples).where("splitcode_with_recharge")
 				.equalTo("splitcode_with_recharge").with(new RcgInnerJoinSplitCodeRev());
 
-		// Rcg inner join Laccima
-		outputAgg2 = src_tuples2.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
-				.with(new RcgInnerJoinLaccima());
+		// Source chg + rcg
+		source_all = source_chg.union(source_rcg);
 
-		// rcg left join laccima NULL
-		src_tuples2_laccima_unknown = src_tuples2.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
-				.with(new RcgLeftJoinLaccimaNULL());
+		/************* 2. Laccima *****************************/
+		// Source inner join Laccima
+		outputAgg_source_laccima = source_all.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
+				.with(new SourceInnerJoinLaccima());
 
-		// chg laccima null + rcg laccima null -> mostdom
-		outputAgg3 = (src_tuples_laccima_unknown.union(src_tuples2_laccima_unknown)).leftOuterJoin(most_dominant_tuples)
-				.where("MSISDN").equalTo("msisdn").with(new UnknownRevLeftJoinMostDominant());
+		/************* 3. Mostdom *****************************/
+		source_laccima_unknown = source_all.leftOuterJoin(laccima_tuples).where("lacci").equalTo("lacci_or_eci")
+				.with(new SourceLeftJoinLaccimaNULL());
 
-		// Summary Chg
-		outputAgg = outputAgg1.union(outputAgg2).union(outputAgg3);
-		outputAgg = outputAgg.groupBy("date", "node_type", "area", "region").reduceGroup(new OutputAggGroupReducer());
+		outputAgg_source_mostdom = source_laccima_unknown.leftOuterJoin(most_dominant_tuples).where("msisdn")
+				.equalTo("msisdn").with(new SourceLeftJoinMostDominant());
+
+		/************* 5. Summary *********************************/
+		outputAgg_all = (outputAgg_source_laccima.union(outputAgg_source_mostdom))
+				.groupBy("date", "node_type", "area", "region").reduceGroup(new OutputAggGroupReducer());
 
 		// Put into tuples
-		output = outputAgg.flatMap(new OutputFlatMap(Constant.USAGE_HEADER));
+		output = outputAgg_all.flatMap(new OutputFlatMap(Constant.USAGE_HEADER));
 	}
 
 	public void sink() throws Exception {

@@ -6,14 +6,15 @@ import java.util.Date;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
+import rafi_naru.qsr.model.Source;
 import rafi_naru.qsr.model.Upcc;
 import rafi_naru.qsr.util.Constant;
 
-public class UpccFlatMap implements FlatMapFunction<String, Upcc> {
+public class UpccFlatMap implements FlatMapFunction<String, Source> {
 
 	private static final long serialVersionUID = 1L;
 
-	public void flatMap(String value, Collector<Upcc> out) throws Exception {
+	public void flatMap(String value, Collector<Source> out) throws Exception {
 		// TODO Auto-generated method stub
 		String[] lines = value.split("\n");
 
@@ -45,7 +46,8 @@ public class UpccFlatMap implements FlatMapFunction<String, Upcc> {
 					} 
 
 					// output
-					out.collect(new Upcc(date, lacci_or_eci, AccessType, QuotaUsage, MSISDN));
+					//out.collect(new Upcc(date, lacci_or_eci, AccessType, QuotaUsage, MSISDN));
+					out.collect(new Source(date, lacci_or_eci, MSISDN, AccessType, QuotaUsage, "upcc")); 
 				}
 			}			
 		}

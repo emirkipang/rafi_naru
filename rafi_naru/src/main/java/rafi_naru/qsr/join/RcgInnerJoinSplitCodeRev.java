@@ -6,20 +6,28 @@ import org.apache.flink.util.Collector;
 
 import rafi_naru.qsr.model.OutputAgg;
 import rafi_naru.qsr.model.Rcg;
+import rafi_naru.qsr.model.Source;
 import rafi_naru.qsr.model.SplitCodeRev;
 
-public class RcgInnerJoinSplitCodeRev implements FlatJoinFunction<Rcg, SplitCodeRev, Rcg> {
+public class RcgInnerJoinSplitCodeRev implements FlatJoinFunction<Rcg, SplitCodeRev, Source> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public void join(Rcg leftElem, SplitCodeRev rightElem, Collector<Rcg> out) throws Exception {
+	public void join(Rcg leftElem, SplitCodeRev rightElem, Collector<Source> out) throws Exception {
 		// TODO Auto-generated method stub
 
 		if (rightElem != null) {
-			out.collect(leftElem);
+			Source source = new Source();
+			source.setDate(leftElem.getDate());
+			source.setLacci(leftElem.getLacci());
+			source.setMsisdn(leftElem.getMSISDN());
+			source.setNode(leftElem.getFuture_String_3());
+			source.setAmount(leftElem.getRevenue());	
+			source.setFeed("rcg");	
+			out.collect(source);
 		}
 
 	}

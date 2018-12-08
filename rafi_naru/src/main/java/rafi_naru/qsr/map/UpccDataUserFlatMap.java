@@ -6,14 +6,16 @@ import java.util.Date;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
+import rafi_naru.qsr.model.Source;
 import rafi_naru.qsr.model.Upcc;
 import rafi_naru.qsr.util.Constant;
+import rafi_naru.qsr.util.Helper;
 
-public class UpccDataUserFlatMap implements FlatMapFunction<String, Upcc> {
+public class UpccDataUserFlatMap implements FlatMapFunction<String, Source> {
 
 	private static final long serialVersionUID = 1L;
 
-	public void flatMap(String value, Collector<Upcc> out) throws Exception {
+	public void flatMap(String value, Collector<Source> out) throws Exception {
 		// TODO Auto-generated method stub
 		String[] lines = value.split("\n");
 
@@ -33,7 +35,7 @@ public class UpccDataUserFlatMap implements FlatMapFunction<String, Upcc> {
 				if (((triggerType.equalsIgnoreCase("2") || triggerType.equalsIgnoreCase("3")
 						|| triggerType.equalsIgnoreCase("18")))) {
 					// body
-					String date = Time.substring(0, 16) + ":00";
+					String date = Helper.getDateAggregate15Minutes(Time.substring(0, 16) + ":00");
 					String lacci_or_eci = "";
 					if (!CGI.equals("")) {
 						lacci_or_eci = CGI.substring(5, 10) + "~" + CGI.substring(10, CGI.length());
@@ -45,7 +47,7 @@ public class UpccDataUserFlatMap implements FlatMapFunction<String, Upcc> {
 					String quotaUsage = "1";
 
 					// output
-					out.collect(new Upcc(date, lacci_or_eci, AccessType, quotaUsage, MSISDN));
+					out.collect(new Source(date, lacci_or_eci, MSISDN, AccessType, quotaUsage, "upcc")); 
 				}
 			}
 		}

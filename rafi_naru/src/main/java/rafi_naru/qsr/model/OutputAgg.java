@@ -83,11 +83,17 @@ public class OutputAgg {
 		this.amount = amount;
 	}
 
-	@Override
+	
 	public String toString() {
 		return this.getDate() + Constant.OUTPUT_DELIMITER + this.getNode_type() + Constant.OUTPUT_DELIMITER
 				+ this.getArea() + Constant.OUTPUT_DELIMITER + this.getRegion() + Constant.OUTPUT_DELIMITER
 				+ this.getAmount();
+	}
+	
+	public String toStringWithMsisdn() {
+		return this.getDate() + Constant.OUTPUT_DELIMITER + this.getNode_type() + Constant.OUTPUT_DELIMITER
+				+ this.getArea() + Constant.OUTPUT_DELIMITER + this.getRegion() + Constant.OUTPUT_DELIMITER
+				+ this.getMsisdn();
 	}
 
 }

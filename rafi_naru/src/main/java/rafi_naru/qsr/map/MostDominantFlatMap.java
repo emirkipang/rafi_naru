@@ -33,8 +33,12 @@ public class MostDominantFlatMap implements FlatMapFunction<String, MostDominant
 				area = field[6];
 				region = field[7];
 
-				// output
-				out.collect(new MostDominant(msisdn, node, area, region));
+				if(!node.equalsIgnoreCase("UNKNOWN")){
+					// output
+					out.collect(new MostDominant(msisdn, node, area, region));
+				}
+				
+
 			}
 
 		}

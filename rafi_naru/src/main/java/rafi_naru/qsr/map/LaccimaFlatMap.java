@@ -31,15 +31,15 @@ public class LaccimaFlatMap implements FlatMapFunction<String, Laccima> {
 
 			if (field.length == Constant.LACCIMA_COLUMN_LENGTH) {
 				// head
-				String lac = field[0];
-				String cell_id = field[1];
-				String node = field[8];
-				String regional_channel = field[17];
-				String eci = field[30];
+				String lac = field[0].trim();
+				String cell_id = field[1].trim();
+				String node = field[8].trim();
+				String regional_channel = field[17].trim();
+				String eci = field[30].trim();
 				String lacci_or_eci = "";
 				String area = "";
 
-				if (!(regional_channel.equals(""))) {
+				if (!(regional_channel.equalsIgnoreCase("") && !(node.equalsIgnoreCase("UNKNOWN")))) {
 
 					// body
 					if (node_.equals("3G")) {

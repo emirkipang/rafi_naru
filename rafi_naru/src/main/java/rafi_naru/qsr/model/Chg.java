@@ -97,16 +97,17 @@ public class Chg {
 	private String revenue; // -1
 
 	// rev
-	public Chg(String date, String lacci, String revenue, String AParty) {
+	public Chg(String date, String lacci, String revenue, String AParty, String FutureString3) {
 		super();
 		this.date = date;
 		this.lacci = lacci;
 		this.revenue = revenue;
 		this.AParty = AParty;
+		this.FutureString3 = FutureString3;
 	}
 
 	// data user
-	public Chg(String date, String lacci, String revenue, String AParty, String Servicefilter, String VAScode) {
+	public Chg(String date, String lacci, String revenue, String AParty, String Servicefilter, String VAScode, String FutureString3) {
 		super();
 		this.date = date;
 		this.lacci = lacci;
@@ -114,6 +115,7 @@ public class Chg {
 		this.AParty = AParty;
 		this.Servicefilter = Servicefilter;
 		this.VAScode = VAScode;
+		this.FutureString3 = FutureString3;
 	}
 
 	public String toStringDataUser() {
