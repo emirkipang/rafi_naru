@@ -19,9 +19,13 @@ public class Constant {
 	public static final int UPCC_COLUMN_LENGTH = 176;
 	public static final int CHG_COLUMN_LENGTH = 81;
 	public static final int RCG_COLUMN_LENGTH = 27;
+	public static final int TC_CHG_COLUMN_LENGTH = 87;
+	public static final int TC_RCG_COLUMN_LENGTH = 29;
 	public static final int LACCIMA_COLUMN_LENGTH = 31;
 	public static final int SPLITCODEREV_COLUMN_LENGTH = 4;
 	public static final int MOST_DOMINANT_COLUMN_LENGTH = 12;
+	public static final int SPLIT_CODE_BROADBAND_COLUMN_LENGTH = 4;
+	public static final int VAS_CODE_BROADBAND_COLUMN_LENGTH = 3;
 
 	// Source
 	public static final String FILE_UPCC = BASEDIR + "/in/upcc";
@@ -35,6 +39,9 @@ public class Constant {
 	public static final String FILE_LACIMA_4G = BASEDIR + "/ref/laccima/v_par_ref_lacima_4g.csv";
 	public static final String FILE_SPLIT_CODE_REV = BASEDIR + "/ref/20181206_Split_Code_Reference.txt";
 	public static final String FILE_MOST_DOMINANT = BASEDIR + "/ref/mostdom.txt";
+	public static final String FILE_SPLIT_CODE_BROADBAND = BASEDIR + "/ref/split_code_broadband.csv";
+	public static final String FILE_VAS_CODE_BROADBAND = BASEDIR + "/ref/vas_code_broadband.csv";
+	
 
 	// Output
 	public static final String OUTPUT_PAYLOAD = BASEDIR + "/out/payload/payload_summary.csv";
