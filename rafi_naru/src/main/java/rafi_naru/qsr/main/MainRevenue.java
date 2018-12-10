@@ -154,43 +154,43 @@ public class MainRevenue {
 		HashMap<String, String> files = new HashMap<String, String>();
 
 		/** prod **/
-		ParameterTool params = ParameterTool.fromArgs(args);
-
-		int proses_paralel = params.getInt("slot");
-		int sink_paralel = params.getInt("sink");
-		String source = params.get("source");
-		String source2 = params.get("source2");
-		String source3 = params.get("source3");
-		String source4 = params.get("source4");
-		String laccima = params.get("laccima");
-		String laccima_4g = params.get("laccima_4g");
-		String most_dominant = params.get("most_dominant");
-		String split_code_ref = params.get("split_code_ref");
-		String output = params.get("output");
-
-		MainRevenue main = new MainRevenue(proses_paralel, sink_paralel, output);
-
-		files.put("source", source);
-		files.put("source2", source2);
-		files.put("source3", source3);
-		files.put("source4", source4);
-		files.put("ref_lacima", laccima);
-		files.put("ref_lacima_4g", laccima_4g);
-		files.put("ref_most_dominant", most_dominant);
-		files.put("split_code_ref", split_code_ref);
+//		ParameterTool params = ParameterTool.fromArgs(args);
+//
+//		int proses_paralel = params.getInt("slot");
+//		int sink_paralel = params.getInt("sink");
+//		String source = params.get("source");
+//		String source2 = params.get("source2");
+//		String source3 = params.get("source3");
+//		String source4 = params.get("source4");
+//		String laccima = params.get("laccima");
+//		String laccima_4g = params.get("laccima_4g");
+//		String most_dominant = params.get("most_dominant");
+//		String split_code_ref = params.get("split_code_ref");
+//		String output = params.get("output");
+//
+//		MainRevenue main = new MainRevenue(proses_paralel, sink_paralel, output);
+//
+//		files.put("source", source);
+//		files.put("source2", source2);
+//		files.put("source3", source3);
+//		files.put("source4", source4);
+//		files.put("ref_lacima", laccima);
+//		files.put("ref_lacima_4g", laccima_4g);
+//		files.put("ref_most_dominant", most_dominant);
+//		files.put("split_code_ref", split_code_ref);
 
 		/** dev **/
-//		int proses_paralel = 2;
-//		int sink_paralel = 1;
-//		MainRevenue main = new MainRevenue(proses_paralel, sink_paralel, Constant.OUTPUT_REVENUE);
-//		files.put("source", Constant.FILE_CHG);
-//		files.put("source2", Constant.FILE_RCG);
-//		files.put("source3", Constant.FILE_TC_CHG);
-//		files.put("source4", Constant.FILE_TC_RCG);
-//		files.put("ref_lacima", Constant.FILE_LACIMA);
-//		files.put("ref_lacima_4g", Constant.FILE_LACIMA_4G);
-//		files.put("ref_most_dominant", Constant.FILE_MOST_DOMINANT);
-//		files.put("split_code_ref", Constant.FILE_SPLIT_CODE_REV);
+		int proses_paralel = 2;
+		int sink_paralel = 1;
+		MainRevenue main = new MainRevenue(proses_paralel, sink_paralel, Constant.OUTPUT_REVENUE);
+		files.put("source", Constant.FILE_CHG);
+		files.put("source2", Constant.FILE_RCG);
+		files.put("source3", Constant.FILE_TC_CHG);
+		files.put("source4", Constant.FILE_TC_RCG);
+		files.put("ref_lacima", Constant.FILE_LACIMA);
+		files.put("ref_lacima_4g", Constant.FILE_LACIMA_4G);
+		files.put("ref_most_dominant", Constant.FILE_MOST_DOMINANT);
+		files.put("split_code_ref", Constant.FILE_SPLIT_CODE_REV);
 
 		/****/
 
