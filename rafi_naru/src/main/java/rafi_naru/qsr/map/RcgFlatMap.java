@@ -36,7 +36,7 @@ public class RcgFlatMap implements FlatMapFunction<String, Rcg> {
 				String Future_String_3 = field[26].trim();//26
 				String MSISDN = field[1].trim(); //1
 				
-				if (!SplitCode.equalsIgnoreCase("001") && !SplitCode.equalsIgnoreCase("088")) {
+				if (!SplitCode.equalsIgnoreCase("001") && !SplitCode.equalsIgnoreCase("088") && !SplitCode.equalsIgnoreCase("")) {
 					// body
 					date = Helper.getFormattedDate(Timestamp.substring(0, 12)+ "00");
 					

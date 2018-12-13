@@ -32,8 +32,10 @@ public class UpccDataUserFlatMap implements FlatMapFunction<String, Source> {
 				String SAI = field[11].trim();
 				String ECGI = field[46].trim();
 
-				if (((triggerType.equalsIgnoreCase("2") || triggerType.equalsIgnoreCase("3")
-						|| triggerType.equalsIgnoreCase("18")))) {
+				if ((triggerType.equalsIgnoreCase("2") || triggerType.equalsIgnoreCase("3")
+						|| triggerType.equalsIgnoreCase("18")) && isValidMsisdn(MSISDN)
+
+				) {
 					// body
 					String date = Helper.getDateAggregate15Minutes(Time.substring(0, 16) + ":00");
 					String lacci_or_eci = "";
@@ -47,10 +49,19 @@ public class UpccDataUserFlatMap implements FlatMapFunction<String, Source> {
 					String quotaUsage = "1";
 
 					// output
-					out.collect(new Source(date, lacci_or_eci, MSISDN, AccessType, quotaUsage, "upcc")); 
+					out.collect(new Source(date, lacci_or_eci, MSISDN, AccessType, quotaUsage, "upcc"));
 				}
 			}
 		}
 	}
 
+	private boolean isValidMsisdn(String msisdn) {
+		if (msisdn.length() >= 3) {
+			if (msisdn.substring(0, 3).equalsIgnoreCase("628")) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

@@ -47,6 +47,7 @@ public class Constant {
 	public static final String OUTPUT_PAYLOAD = BASEDIR + "/out/payload/payload_summary.csv";
 	public static final String OUTPUT_REVENUE = BASEDIR + "/out/revenue/revenue_summary.csv";
 	public static final String OUTPUT_USER = BASEDIR + "/out/datauser/datauser_summary.csv";
+	public static final String OUTPUT_REVENUE2 = BASEDIR + "/out/revenue/revenue_summary2.csv";
 
 	// Ref ocs_bucket_rev
 	public static final String[] OCS_BUCKET_REV = { "3311504", "3287074", "3358724", "3364804" };

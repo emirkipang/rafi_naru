@@ -30,11 +30,12 @@ public class ChgPayloadFlatMap implements FlatMapFunction<String, Source> {
 				String FutureString3 = field[80].trim();// 80
 				String AParty = field[1].trim(); // 1
 				String Servicefilter = field[53].trim();// 53
-				String Totalvolume = field[36];// 36
+				String Freetotalvolume = checkBlank(field[41].trim());// 41
+				String Roundedtotalvolume = checkBlank(field[37].trim());// 37
 
 				if (Servicefilter.equalsIgnoreCase("GPRS")) {
 					// body
-					date = Helper.getDateAggregate15Minutes(Helper.getFormattedDate(Timestamp.substring(0, 12) + "00"));
+					date = Helper.getFormattedDate(Timestamp.substring(0, 12) + "00");
 
 					// Lacci
 					if (FutureString3.equalsIgnoreCase("129")) {
@@ -46,7 +47,11 @@ public class ChgPayloadFlatMap implements FlatMapFunction<String, Source> {
 					}
 
 					// amount
-					revenue = Totalvolume;
+					// - chg non payu : service filter = GPRS, ambil free volume
+					// - chg payu : service filter = GPRS, ambil (rounded - free volume)
+
+					revenue = Double.toString(
+							Math.abs(Double.parseDouble(Roundedtotalvolume) - Double.parseDouble(Freetotalvolume)));
 
 					// output
 					out.collect(new Source(date, lacci, AParty, FutureString3, revenue, "chg"));
@@ -54,6 +59,13 @@ public class ChgPayloadFlatMap implements FlatMapFunction<String, Source> {
 
 			}
 		}
+	}
+
+	private String checkBlank(String s) {
+		if (s.equalsIgnoreCase(""))
+			return "0";
+		else
+			return s;
 	}
 
 }

@@ -64,9 +64,11 @@ public class ChgFlatMap implements FlatMapFunction<String, Source> {
 						revenue = Chargeincludingfreeallowance;
 					} else if(Creditindicator.equals("C")) {
 						revenue = Double.toString((Double.parseDouble(AccountDelta) * -1)) ;
-					} else if(isMonbal(Contentid)&& Creditindicator.equals("D")) {
-						revenue = Chargeincludingfreeallowance;
-					} else {
+					} 
+//					else if(isMonbal(Contentid)&& Creditindicator.equals("D")) {
+//						revenue = Chargeincludingfreeallowance;
+//					} 
+					else {
 						revenue = AccountDelta;
 					}					
 				

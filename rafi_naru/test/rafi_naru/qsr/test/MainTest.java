@@ -68,6 +68,16 @@ public class MainTest {
 //		}
 //		
 //		System.out.println(pre + menit + post);
+		
+		String msisdn = "6281";
+		if(msisdn.length() >= 3) {
+			if(msisdn.substring(0,3).equalsIgnoreCase("628")) {
+				System.out.println("Valid");
+			} else {
+				System.out.println("Invalid");
+			}
+		}
+		
 
 	}
 
