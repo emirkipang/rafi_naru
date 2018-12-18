@@ -49,9 +49,10 @@ public class ChgPayloadFlatMap implements FlatMapFunction<String, Source> {
 					// amount
 					// - chg non payu : service filter = GPRS, ambil free volume
 					// - chg payu : service filter = GPRS, ambil (rounded - free volume)
-
-					revenue = Double.toString(
-							Math.abs(Double.parseDouble(Roundedtotalvolume) - Double.parseDouble(Freetotalvolume)));
+					Double payu = Double.parseDouble(Roundedtotalvolume) - Double.parseDouble(Freetotalvolume);
+					Double nonpayu = Double.parseDouble(Freetotalvolume);
+					
+					revenue = Double.toString(payu + nonpayu);
 
 					// output
 					out.collect(new Source(date, lacci, AParty, FutureString3, revenue, "chg"));

@@ -99,7 +99,8 @@ public class MainRevenue {
 	public void processInput() {
 		// chg directly to source
 		source_chg = dataset_inputs.get("source").flatMap(new ChgFlatMap())
-				.union(dataset_inputs.get("source3").flatMap(new ChgFlatMap()));
+				.union(dataset_inputs.get("source3").flatMap(new ChgFlatMap()))
+				.union(dataset_inputs.get("source5").flatMap(new ChgFlatMap()));
 		
 		// rcg
 		src_tuples_rcg = dataset_inputs.get("source2").flatMap(new RcgFlatMap())
@@ -162,6 +163,7 @@ public class MainRevenue {
 		String source2 = params.get("source2");
 		String source3 = params.get("source3");
 		String source4 = params.get("source4");
+		String source5 = params.get("source5");
 		String laccima = params.get("laccima");
 		String laccima_4g = params.get("laccima_4g");
 		String most_dominant = params.get("most_dominant");
@@ -174,6 +176,7 @@ public class MainRevenue {
 		files.put("source2", source2);
 		files.put("source3", source3);
 		files.put("source4", source4);
+		files.put("source5", source5);
 		files.put("ref_lacima", laccima);
 		files.put("ref_lacima_4g", laccima_4g);
 		files.put("ref_most_dominant", most_dominant);

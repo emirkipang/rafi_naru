@@ -21,6 +21,7 @@ public class OutputAgg {
 		this.area = area;
 		this.region = region;
 		this.amount = amount;
+		
 	}
 	
 	// DataUser
@@ -89,6 +90,7 @@ public class OutputAgg {
 				+ this.getArea() + Constant.OUTPUT_DELIMITER + this.getRegion() + Constant.OUTPUT_DELIMITER
 				+ this.getAmount();
 	}
+
 	
 	public String toStringWithMsisdn() {
 		return this.getDate() + Constant.OUTPUT_DELIMITER + this.getNode_type() + Constant.OUTPUT_DELIMITER

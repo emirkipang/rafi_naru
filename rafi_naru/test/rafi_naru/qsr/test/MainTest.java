@@ -1,5 +1,8 @@
 package rafi_naru.qsr.test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import rafi_naru.qsr.util.Helper;
 
 public class MainTest {
@@ -69,16 +72,18 @@ public class MainTest {
 //		
 //		System.out.println(pre + menit + post);
 		
-		String msisdn = "6281";
-		if(msisdn.length() >= 3) {
-			if(msisdn.substring(0,3).equalsIgnoreCase("628")) {
-				System.out.println("Valid");
-			} else {
-				System.out.println("Invalid");
-			}
-		}
-		
-
+//		String msisdn = "6281";
+//		if(msisdn.length() >= 3) {
+//			if(msisdn.substring(0,3).equalsIgnoreCase("628")) {
+//				System.out.println("Valid");
+//			} else {
+//				System.out.println("Invalid");
+//			}
+//		}
+//		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");  
+		   LocalDateTime now = LocalDateTime.now();  
+		   System.out.println(dtf.format(now));  
 	}
 
 }

@@ -1,5 +1,8 @@
 package rafi_naru.qsr.util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Constant {
 	public static final String OUTPUT_DELIMITER = "|";
 	
@@ -7,11 +10,17 @@ public class Constant {
 	public static final String APP_NAME_PAYLOAD = "Flink Payload Rafi/Naru";
 	public static final String APP_NAME_REVENUE = "Flink Revenue Rafi/Naru";
 	public static final String APP_NAME_USER = "Flink Data User Rafi/Naru";
+	public static final String APP_NAME_COUNTER_USER_DISTINCT = "Flink Data User Distinct Rafi/Naru";
+	public static final String APP_NAME_DU_ITU = "Flink DU ITU Base creation";
 	
 	public static final String PAYLOAD_HEADER = "PAYLOAD";
 	public static final String USAGE_HEADER = "USAGE";
 	public static final String DATAUSER_HEADER = "DATAUSER";
+	public static final String DATAUSER_ITU = "DU_ITU";
+	// datenow
+	//public static final String datenow = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDateTime.now());  
 
+	
 	// Base dir for data
 	public static final String BASEDIR = "C:/Data";
 	
@@ -26,6 +35,7 @@ public class Constant {
 	public static final int MOST_DOMINANT_COLUMN_LENGTH = 12;
 	public static final int SPLIT_CODE_BROADBAND_COLUMN_LENGTH = 4;
 	public static final int VAS_CODE_BROADBAND_COLUMN_LENGTH = 3;
+	public static final int COUNTER_OUTPUT_LENGTH = 7;
 
 	// Source
 	public static final String FILE_UPCC = BASEDIR + "/in/upcc";
@@ -33,6 +43,7 @@ public class Constant {
 	public static final String FILE_RCG = BASEDIR + "/in/rcg";
 	public static final String FILE_TC_CHG = BASEDIR + "/in/tc_chg";
 	public static final String FILE_TC_RCG = BASEDIR + "/in/tc_rcg";
+	public static final String FILE_DATAUSER_OUTPUT = BASEDIR + "/out/datauser/datauser_summary.csv";
 
 	// Ref
 	public static final String FILE_LACIMA = BASEDIR + "/ref/laccima/v_par_ref_lacima.csv";
@@ -47,6 +58,7 @@ public class Constant {
 	public static final String OUTPUT_PAYLOAD = BASEDIR + "/out/payload/payload_summary.csv";
 	public static final String OUTPUT_REVENUE = BASEDIR + "/out/revenue/revenue_summary.csv";
 	public static final String OUTPUT_USER = BASEDIR + "/out/datauser/datauser_summary.csv";
+	public static final String OUTPUT_USER_DISTINCT = BASEDIR + "/out/datauser/datauser_summary_distinct.csv";
 	public static final String OUTPUT_REVENUE2 = BASEDIR + "/out/revenue/revenue_summary2.csv";
 
 	// Ref ocs_bucket_rev

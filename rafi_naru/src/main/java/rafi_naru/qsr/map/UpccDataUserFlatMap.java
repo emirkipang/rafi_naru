@@ -37,7 +37,8 @@ public class UpccDataUserFlatMap implements FlatMapFunction<String, Source> {
 
 				) {
 					// body
-					String date = Helper.getDateAggregate15Minutes(Time.substring(0, 16) + ":00");
+//					String date = Helper.getDateAggregate30Minutes(Time.substring(0, 16) + ":00");
+					String date = Time.substring(0, 10);
 					String lacci_or_eci = "";
 					if (!CGI.equals("")) {
 						lacci_or_eci = CGI.substring(5, 10) + "~" + CGI.substring(10, CGI.length());

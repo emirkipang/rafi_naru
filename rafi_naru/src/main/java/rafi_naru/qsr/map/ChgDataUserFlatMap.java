@@ -36,8 +36,9 @@ public class ChgDataUserFlatMap implements FlatMapFunction<String, Chg> {
 				String VAScode = field[52];// 52
 
 				// body
-				date = Helper.getDateAggregate15Minutes(Helper.getFormattedDate(Timestamp.substring(0, 12) + "00"));
-
+				//date = Helper.getDateAggregate30Minutes(Helper.getFormattedDate(Timestamp.substring(0, 12) + "00"));
+				date = Timestamp.substring(0, 8);
+				
 				// Lacci
 				if (FutureString3.equalsIgnoreCase("129")) {
 					lacci = CellID.substring(10, 17) + "~" + CellID.substring(17, CellID.length());

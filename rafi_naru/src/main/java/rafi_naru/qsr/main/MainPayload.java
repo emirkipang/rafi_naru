@@ -100,7 +100,8 @@ public class MainPayload {
 		
 		// chg to source directly
 		source_chg = dataset_inputs.get("source2").flatMap(new ChgPayloadFlatMap())
-				.union(dataset_inputs.get("source3").flatMap(new ChgPayloadFlatMap()));
+				.union(dataset_inputs.get("source3").flatMap(new ChgPayloadFlatMap()))
+				.union(dataset_inputs.get("source4").flatMap(new ChgPayloadFlatMap()));
 
 		// ref
 		laccima_tuples_3g = dataset_inputs.get("ref_lacima").flatMap(new LaccimaFlatMap("3G", false));
@@ -154,6 +155,7 @@ public class MainPayload {
 		String source = params.get("source");
 		String source2 = params.get("source2");
 		String source3 = params.get("source3");
+		String source4 = params.get("source4");
 		String laccima = params.get("laccima");
 		String laccima_4g = params.get("laccima_4g");
 		String most_dominant = params.get("most_dominant");
@@ -164,6 +166,7 @@ public class MainPayload {
 		files.put("source", source);
 		files.put("source2", source2);
 		files.put("source3", source3);
+		files.put("source4", source4);
 		files.put("ref_lacima", laccima);
 		files.put("ref_lacima_4g", laccima_4g);
 		files.put("ref_most_dominant", most_dominant);

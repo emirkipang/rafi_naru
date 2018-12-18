@@ -3,7 +3,6 @@ package rafi_naru.qsr.main;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.flink.api.common.operators.base.JoinOperatorBase.JoinHint;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -11,7 +10,6 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.FileSystem.WriteMode;
 
 import rafi_naru.qsr.agg.OutputAggDistinctMsisdnGroupReducer;
-import rafi_naru.qsr.agg.OutputAggGroupReducer;
 import rafi_naru.qsr.join.ChgDataUserInnerJoinVasCodeBroadband;
 import rafi_naru.qsr.join.RcgDataUserInnerJoinSplitCodeBroadband;
 import rafi_naru.qsr.join.SourceInnerJoinLaccima;
@@ -20,7 +18,6 @@ import rafi_naru.qsr.join.SourceLeftJoinMostDominantWithMsisdn;
 import rafi_naru.qsr.map.ChgDataUserFlatMap;
 import rafi_naru.qsr.map.LaccimaFlatMap;
 import rafi_naru.qsr.map.MostDominantFlatMap;
-import rafi_naru.qsr.map.OutputFlatMap;
 import rafi_naru.qsr.map.OutputFlatMapWithMsisdn;
 import rafi_naru.qsr.map.RcgDataUserFlatMap;
 import rafi_naru.qsr.map.SplitCodeBroadbandFlatMap;
@@ -70,7 +67,6 @@ public class MainDataUserWithMsisdn {
 	private DataSet<OutputAgg> outputAgg_source_laccima;
 	private DataSet<OutputAgg> outputAgg_source_mostdom;
 	private DataSet<OutputAgg> outputAgg_all_distinct;
-	private DataSet<OutputAgg> outputAgg_all;
 	private DataSet<OutputTuple> output;
 
 	public MainDataUserWithMsisdn(int proses_paralel, int sink_paralel, String outputPath) {
@@ -114,7 +110,8 @@ public class MainDataUserWithMsisdn {
 	public void processInput() {
 		// source
 		src_tuples_chg = dataset_inputs.get("source").flatMap(new ChgDataUserFlatMap())
-				.union(dataset_inputs.get("source4").flatMap(new ChgDataUserFlatMap()));
+				.union(dataset_inputs.get("source4").flatMap(new ChgDataUserFlatMap()))
+				.union(dataset_inputs.get("source6").flatMap(new ChgDataUserFlatMap()));
 		src_tuples_rcg = dataset_inputs.get("source2").flatMap(new RcgDataUserFlatMap())
 				.union(dataset_inputs.get("source5").flatMap(new RcgDataUserFlatMap()));
 
@@ -189,6 +186,7 @@ public class MainDataUserWithMsisdn {
 		String source3 = params.get("source3");
 		String source4 = params.get("source4");
 		String source5 = params.get("source5");
+		String source6 = params.get("source6");
 		String laccima = params.get("laccima");
 		String laccima_4g = params.get("laccima_4g");
 		String most_dominant = params.get("most_dominant");
@@ -203,6 +201,7 @@ public class MainDataUserWithMsisdn {
 		files.put("source3", source3);
 		files.put("source4", source4);
 		files.put("source5", source5);
+		files.put("source6", source6);
 		files.put("ref_lacima", laccima);
 		files.put("ref_lacima_4g", laccima_4g);
 		files.put("ref_most_dominant", most_dominant);

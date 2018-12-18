@@ -42,12 +42,11 @@ public class Helper {
 
 		return df.format(n);
 	}
-	
+
 	public static final String getDateAggregate15Minutes(String date) {
 //		String date = "2018-12-03 12:56:00";
 		String pre = date.substring(0, 14);
 		String post = date.substring(16, date.length());
-
 
 		String menit = date.substring(14, 16);
 		int int_menit = Integer.parseInt(menit);
@@ -61,7 +60,23 @@ public class Helper {
 		} else if (int_menit >= 45 && int_menit <= 59) {
 			menit = "45";
 		}
-		
+
+		return pre + menit + post;
+	}
+
+	public static final String getDateAggregate30Minutes(String date) {
+//		String date = "2018-12-03 12:56:00";
+		String pre = date.substring(0, 14);
+		String post = date.substring(16, date.length());
+
+		String menit = date.substring(14, 16);
+		int int_menit = Integer.parseInt(menit);
+
+		if (int_menit >= 0 && int_menit <= 29) {
+			menit = "00";
+		} else if (int_menit >= 30 && int_menit <= 59) {
+			menit = "30";
+		}
 		return pre + menit + post;
 	}
 
