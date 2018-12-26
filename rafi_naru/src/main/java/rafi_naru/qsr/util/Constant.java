@@ -31,6 +31,7 @@ public class Constant {
 	public static final int TC_CHG_COLUMN_LENGTH = 87;
 	public static final int TC_RCG_COLUMN_LENGTH = 29;
 	public static final int LACCIMA_COLUMN_LENGTH = 31;
+	public static final int ITU_COLUMN_LENGTH = 1;
 	public static final int SPLITCODEREV_COLUMN_LENGTH = 4;
 	public static final int MOST_DOMINANT_COLUMN_LENGTH = 12;
 	public static final int SPLIT_CODE_BROADBAND_COLUMN_LENGTH = 4;

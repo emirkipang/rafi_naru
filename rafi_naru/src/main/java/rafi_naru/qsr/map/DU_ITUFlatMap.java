@@ -15,10 +15,10 @@ import rafi_naru.qsr.util.Helper;
 public class DU_ITUFlatMap implements FlatMapFunction<String, Source> {
 
 	private static final long serialVersionUID = 1L;
-	private String prc_date;
-	
-	public DU_ITUFlatMap(String prc_date) {
-		this.prc_date = prc_date;
+	private String next_prc_date;
+
+	public DU_ITUFlatMap(String next_prc_date) {
+		this.next_prc_date = next_prc_date;
 	}
 
 	public void flatMap(String value, Collector<Source> out) throws Exception {
@@ -28,16 +28,19 @@ public class DU_ITUFlatMap implements FlatMapFunction<String, Source> {
 		for (String fields : lines) {
 			String[] field = fields.split("\\|", -1);
 
-			// head
-//			String date = field[0].trim();
-			String date = this.prc_date + Constant.OUTPUT_DELIMITER + this.prc_date;
-			String msisdn = field[1].trim();
-			String lacci = "00000~00000";
-			String FutureString3= "";
-			String revenue = "";
-			
-			// output
-			out.collect(new Source(date, lacci, msisdn, FutureString3, revenue, "du")); 
+			if (field.length == Constant.ITU_COLUMN_LENGTH) {
+				// head
+				String date = next_prc_date + Constant.OUTPUT_DELIMITER + next_prc_date;
+				String msisdn = field[0].trim();
+				String lacci = "00000~00000";
+				String FutureString3 = "";
+				String revenue = "";
+
+				if (!msisdn.equalsIgnoreCase("msisdn")) {
+					// output
+					out.collect(new Source(date, lacci, msisdn, FutureString3, revenue, "du"));
+				}
+			}
 
 		}
 	}

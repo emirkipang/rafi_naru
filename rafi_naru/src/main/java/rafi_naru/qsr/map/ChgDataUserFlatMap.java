@@ -37,7 +37,7 @@ public class ChgDataUserFlatMap implements FlatMapFunction<String, Chg> {
 
 				// body
 				//date = Helper.getDateAggregate30Minutes(Helper.getFormattedDate(Timestamp.substring(0, 12) + "00"));
-				date = Timestamp.substring(0, 8);
+				date = Helper.getFormattedDateOnly(Timestamp.substring(0, 8));
 				
 				// Lacci
 				if (FutureString3.equalsIgnoreCase("129")) {

@@ -38,7 +38,7 @@ public class RcgDataUserFlatMap implements FlatMapFunction<String, Rcg> {
 
 				// body
 				//date = Helper.getDateAggregate30Minutes(Helper.getFormattedDate(Timestamp.substring(0, 12) + "00"));
-				date = Timestamp.substring(0, 8);
+				date = Helper.getFormattedDateOnly(Timestamp.substring(0, 8));
 				
 				// Lacci
 				if (Future_String_3.equalsIgnoreCase("4G") && !Anumberlocation.equalsIgnoreCase("")) {

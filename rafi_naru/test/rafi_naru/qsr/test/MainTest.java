@@ -9,6 +9,9 @@ public class MainTest {
 	public static void main(String[] args) {
 //		String s = "+628115520412";
 //		System.out.println(s.replace("+", ""));
+		
+		String s = "2018-12-08";
+		System.out.println(s.substring(0,10));
 
 //		String datetime = "20181203120506";
 ////		String cgi = "5101000000123456789";
@@ -81,9 +84,9 @@ public class MainTest {
 //			}
 //		}
 //		
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");  
-		   LocalDateTime now = LocalDateTime.now();  
-		   System.out.println(dtf.format(now));  
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");  
+//		   LocalDateTime now = LocalDateTime.now();  
+//		   System.out.println(dtf.format(now));  
 	}
 
 }

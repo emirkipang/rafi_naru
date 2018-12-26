@@ -23,6 +23,15 @@ public class Helper {
 
 		return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
 	}
+	
+	public static final String getFormattedDateOnly(String datetime) {
+		// note: only for dateformat : "20181203"
+		String year = datetime.substring(0, 4);
+		String month = datetime.substring(4, 6);
+		String day = datetime.substring(6, 8);
+
+		return year + "-" + month + "-" + day;
+	}
 
 	public static final String joinRule(String in, int length) {
 		int gap = length - in.length();
