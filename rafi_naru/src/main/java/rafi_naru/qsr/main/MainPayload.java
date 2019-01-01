@@ -172,10 +172,13 @@ public class MainPayload {
 		files.put("ref_most_dominant", most_dominant);
 
 		/** dev **/
-//		int proses_paralel = 2;
+//		int proses_paralel = 4;
 //		int sink_paralel = 1;
 //		MainPayload main = new MainPayload(proses_paralel, sink_paralel, Constant.OUTPUT_PAYLOAD);
 //		files.put("source", Constant.FILE_UPCC);
+//		files.put("source2", Constant.FILE_CHG);
+//		files.put("source3", Constant.FILE_TC_CHG);
+//		files.put("source4", Constant.FILE_CHG);
 //		files.put("ref_lacima", Constant.FILE_LACIMA);
 //		files.put("ref_lacima_4g", Constant.FILE_LACIMA_4G);
 //		files.put("ref_most_dominant", Constant.FILE_MOST_DOMINANT);

@@ -9,6 +9,7 @@ import org.apache.flink.util.Collector;
 import rafi_naru.qsr.model.Source;
 import rafi_naru.qsr.model.Upcc;
 import rafi_naru.qsr.util.Constant;
+import rafi_naru.qsr.util.Helper;
 
 public class UpccFlatMap implements FlatMapFunction<String, Source> {
 
@@ -42,7 +43,16 @@ public class UpccFlatMap implements FlatMapFunction<String, Source> {
 					} else if (CGI.equals("") && !SAI.equals("")) {
 						lacci_or_eci = SAI.substring(5, 10) + "~" + SAI.substring(10, SAI.length());
 					} else if (CGI.equals("") && SAI.equals("") && ECGI.length() > 0) {
-						lacci_or_eci = ECGI.substring(5);
+						//lacci_or_eci = ECGI.substring(5);
+						
+						// updated at 2018-12-27
+						String lacci_bin = Long.toBinaryString(Long.parseLong(ECGI.substring(5)));
+						String ci_bin = lacci_bin.substring(lacci_bin.length()-8,lacci_bin.length());
+						String lac_bin = lacci_bin.substring(0,lacci_bin.length()-8);
+						String lac = Helper.joinRule(Long.toString(Long.parseLong(lac_bin,2)), 7);
+						String ci = Helper.joinRule(Long.toString(Long.parseLong(ci_bin,2)), 3);
+						
+						lacci_or_eci = lac + "~" + ci;
 					} 
 
 					// output

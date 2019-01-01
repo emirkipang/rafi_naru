@@ -47,8 +47,8 @@ public class Constant {
 	public static final String FILE_DATAUSER_OUTPUT = BASEDIR + "/out/datauser/datauser_summary.csv";
 
 	// Ref
-	public static final String FILE_LACIMA = BASEDIR + "/ref/laccima/v_par_ref_lacima.csv";
-	public static final String FILE_LACIMA_4G = BASEDIR + "/ref/laccima/v_par_ref_lacima_4g.csv";
+	public static final String FILE_LACIMA = BASEDIR + "/ref/laccima/report_teradata_20181226.csv";
+	public static final String FILE_LACIMA_4G = BASEDIR + "/ref/laccima/report_teradata_4g_20181226.csv";
 	public static final String FILE_SPLIT_CODE_REV = BASEDIR + "/ref/20181206_Split_Code_Reference.txt";
 	public static final String FILE_MOST_DOMINANT = BASEDIR + "/ref/mostdom.txt";
 	public static final String FILE_SPLIT_CODE_BROADBAND = BASEDIR + "/ref/split_code_broadband.csv";
